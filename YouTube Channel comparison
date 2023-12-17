@@ -79,7 +79,7 @@ def plot_views_chart(channel_data):
 
 def main():
     # Set your YouTube Data API key
-    api_key = "AIzaSyAgQjTaD0YhsrxnKet2G5vfdNJ51P_cM_E"
+    api_key = "Your_API_Key" #you'll get it in Google Consol
 
     # List of channel ID ifn you want to change then do here 
     channel_ids = [
