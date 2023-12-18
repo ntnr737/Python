@@ -1,0 +1,109 @@
+#Important to note this code only run if you will have YouTube API check line 82 (api_key = "Your_API_Key") replace with your API
+
+import os
+import googleapiclient.discovery
+from google.oauth2.credentials import Credentials
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+import pandas as pd
+
+
+def fetch_channel_data(api_key, channel_ids):
+    youtube = googleapiclient.discovery.build("youtube", "v3", developerKey=api_key)
+
+    channels_data = []
+    for channel_id in channel_ids:
+        request = youtube.channels().list(
+            part="snippet,contentDetails,statistics",
+            id=channel_id
+        )
+        response = request.execute()
+        channels_data.append(response['items'][0])
+
+    return channels_data
+
+def plot_subscribers_chart(channel_data):
+    channels = []
+    subscriptions = []
+
+    for channel in channel_data:
+        channels.append(channel['snippet']['title'])
+        subscriptions.append(int(channel['statistics']['subscriberCount']))
+#Starting Visualization using Matplotlib library
+    #figsize=(10, 6) is an argument width and height of the figure in inches. In this case, (10, 6)
+    plt.figure(figsize=(10, 6))
+    
+    plt.barh(channels, subscriptions, color='skyblue', edgecolor='black', linewidth=1.2)
+    plt.xlabel('Subscribers Count', fontsize=12)
+    plt.ylabel('Channels', fontsize=12)
+    plt.title('Subscribers Count Comparison', fontsize=14)
+    plt.xticks(fontsize=10)
+    plt.yticks(fontsize=10)
+    plt.gca().invert_yaxis()  # Invert y-axis for readability
+
+    # Format x-axis labels in millions
+    formatter = FuncFormatter(lambda x, pos: '{:.1f}M'.format(x / 1e6))
+    plt.gca().xaxis.set_major_formatter(formatter)
+
+    # Add gridlines
+    plt.grid(axis='x', linestyle='--', alpha=0.7)
+
+    plt.tight_layout()
+    plt.show()
+
+def plot_views_chart(channel_data):
+    channels = []
+    views = []
+
+    for channel in channel_data:
+        channels.append(channel['snippet']['title'])
+        views.append(int(channel['statistics']['viewCount']))
+
+#Starting Visualization from here
+    plt.figure(figsize=(10, 6))
+    plt.barh(channels, views, color='orange', edgecolor='black', linewidth=1.2)
+    plt.xlabel('Views Count', fontsize=12)
+    plt.ylabel('Channels', fontsize=12)
+    plt.title('Views Count Comparison', fontsize=14)
+    plt.xticks(fontsize=10)
+    plt.yticks(fontsize=10)
+    plt.gca().invert_yaxis()  # Invert y-axis for readability
+
+    # Format x-axis labels in millions
+    formatter = FuncFormatter(lambda x, pos: '{:.1f}M'.format(x / 1e6))
+    plt.gca().xaxis.set_major_formatter(formatter)
+
+    # Add gridlines
+    plt.grid(axis='x', linestyle='--', alpha=0.7)
+
+    plt.tight_layout()
+    plt.show()
+
+def main():
+    # Set your YouTube Data API key
+    api_key = "Your_API_Key" #you'll get it in Google Consol
+
+    # This one of my List of channel ID if you want to change then do here 
+    channel_ids = [
+        "UCHmk8iNJHvf5mGN6_pkPc7g", "UCMXMp3Lc6v6v8dJH5ZGwtqA", "UC1KonH1j8WMhc5cT6Bp7NtA",
+        "UCUQg_UBQfVjptn7Wqcgzz-w", "UC_Q-YjEXDN0ufkU4AoWhU1g", "UC9ChdqQRCaZmTCwSJ49tcbw",
+        "UC_hjbH7rzmVgLMMNZ_bTY5g", "UC4aTcVTewbHtLeV8eK3enwA", "UCUwSeY7lUdZSP0vuflq1oPA"
+    ]
+
+    new_channel = input("Enter a new YouTube channel ID (or press Enter to skip): ").strip()
+    if new_channel:
+        channel_ids.append(new_channel)
+
+    # Fetch channel data
+    channel_data = fetch_channel_data(api_key, channel_ids)
+
+    # Plot subscribers count chart
+    plot_subscribers_chart(channel_data)
+
+    # Plot views count chart
+    plot_views_chart(channel_data)
+
+    # Perform additional exploratory data analysis (EDA) using the 'channel_data' DataFrame
+
+if __name__ == "__main__":
+    main()
