@@ -1,3 +1,5 @@
+#Important to note this code only run if you will have YouTube API check line 82 (api_key = "Your_API_Key") replace with your API
+
 import os
 import googleapiclient.discovery
 from google.oauth2.credentials import Credentials
@@ -27,7 +29,7 @@ def plot_subscribers_chart(channel_data):
     for channel in channel_data:
         channels.append(channel['snippet']['title'])
         subscriptions.append(int(channel['statistics']['subscriberCount']))
-#Starting Visualization
+#Starting Visualization using Matplotlib library
     #figsize=(10, 6) is an argument width and height of the figure in inches. In this case, (10, 6)
     plt.figure(figsize=(10, 6))
     
@@ -81,7 +83,7 @@ def main():
     # Set your YouTube Data API key
     api_key = "Your_API_Key" #you'll get it in Google Consol
 
-    # List of channel ID ifn you want to change then do here 
+    # This one of my List of channel ID if you want to change then do here 
     channel_ids = [
         "UCHmk8iNJHvf5mGN6_pkPc7g", "UCMXMp3Lc6v6v8dJH5ZGwtqA", "UC1KonH1j8WMhc5cT6Bp7NtA",
         "UCUQg_UBQfVjptn7Wqcgzz-w", "UC_Q-YjEXDN0ufkU4AoWhU1g", "UC9ChdqQRCaZmTCwSJ49tcbw",
